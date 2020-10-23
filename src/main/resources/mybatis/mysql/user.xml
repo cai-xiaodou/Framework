@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.sandi.mybatis.mapper.UserMapper">
+
+	<select id="getUserList" resultType="HashMap">
+		select * from user
+	</select>
+	
+	<select id="selectByid" parameterType="Long" resultType="user">
+		select USER_ID as userId,USER_NAME as userName,USER_AGE as userAge
+		from user where USER_ID=#{id}
+	</select>
+	
+	<insert id="insertUser">
+		<selectKey keyProperty="userId" resultType="Long" order="BEFORE">
+    		select MAX(USER_ID)+1 from user
+ 	 	</selectKey>
+		insert into user(USER_ID,USER_NAME,USER_AGE)
+		values (#{userId},#{userName},#{userAge})
+	</insert>
+	
+	<insert id="batchInsert">
+		<selectKey keyProperty="userId" resultType="Long" order="BEFORE">
+    		select MAX(USER_ID)+1 from user
+ 	 	</selectKey>
+		insert into user(USER_ID,USER_NAME,USER_AGE) values 
+		<foreach item="item" collection="list" separator="," index="index">
+    		(#{item.userId},#{item.userName}, #{item.userAge})
+  		</foreach>
+		
+	</insert>
+	
+</mapper>
